@@ -73,6 +73,12 @@ vim.opt.tabstop = 4
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
+vim.filetype.add({
+	pattern = {
+		[".*%.blade.%.php"] = "blade",
+	},
+})
+
 -- Set highlight on search, but clear on pressing <Esc> in normal mode
 vim.opt.hlsearch = true
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
@@ -200,7 +206,9 @@ require("lazy").setup({
 		"folke/which-key.nvim",
 		event = "VimEnter", -- Sets the loading event to 'VimEnter'
 		config = function() -- This is the function that runs, AFTER loading
-			require("which-key").setup()
+			require("which-key").setup({
+				notify = false,
+			})
 
 			-- Document existing key chains
 			require("which-key").register({
@@ -482,14 +490,13 @@ require("lazy").setup({
 				--    https://github.com/pmizio/typescript-tools.nvim
 				--
 				-- But for many setups, the LSP (`tsserver`) will work just fine
-				-- tsserver = {},
 				--
-
-				-- helm_ls = {
-				-- 	yamlls = {
-				-- 		path = "yaml-language-server",
-				-- 	},
-				-- },
+				phpactor = {},
+				helm_ls = {
+					yamlls = {
+						path = "yaml-language-server",
+					},
+				},
 				yamlls = {},
 				lua_ls = {
 					-- cmd = {...},
@@ -505,6 +512,7 @@ require("lazy").setup({
 						},
 					},
 				},
+				zls = {},
 			}
 
 			-- Ensure the servers and tools above are installed
@@ -520,6 +528,7 @@ require("lazy").setup({
 			local ensure_installed = vim.tbl_keys(servers or {})
 			vim.list_extend(ensure_installed, {
 				"stylua", -- Used to format Lua code
+				"pint",
 			})
 			require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
 
@@ -567,6 +576,8 @@ require("lazy").setup({
 				lua = { "stylua" },
 				go = { "gofmt" },
 				rust = { "cargo fmt" },
+				blade = { "blade-formatter" },
+				-- html = { "prettier" },
 				-- Conform can also run multiple formatters sequentially
 				-- python = { "isort", "black" },
 				--
@@ -752,7 +763,7 @@ require("lazy").setup({
 			"nvim-treesitter/nvim-treesitter-textobjects",
 		},
 		opts = {
-			ensure_installed = { "bash", "c", "html", "lua", "luadoc", "markdown", "vim", "vimdoc" },
+			ensure_installed = { "bash", "c", "html", "lua", "luadoc", "markdown", "vim", "vimdoc", "php" },
 			-- Autoinstall languages that are not installed
 			auto_install = true,
 			highlight = {

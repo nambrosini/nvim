@@ -43,10 +43,10 @@ return {
 		dependencies = { "nvim-tree/nvim-web-devicons" },
 		opts = {},
 	},
-	{
-		"github/copilot.vim",
-		event = "InsertEnter",
-	},
+	-- {
+	-- 	"github/copilot.vim",
+	-- 	event = "InsertEnter",
+	-- },
 	{
 		"windwp/nvim-autopairs",
 		event = "InsertEnter",
@@ -65,11 +65,11 @@ return {
 		version = "^4", -- Recommended
 		lazy = false, -- This plugin is already lazy
 	},
-	-- {
-	-- 	"towolf/vim-helm",
-	-- 	event = { "BufRead", "BufNewFile" },
-	-- 	ft = "helm",
-	-- },
+	{
+		"towolf/vim-helm",
+		event = { "BufRead", "BufNewFile" },
+		ft = "helm",
+	},
 	{
 		"nvim-java/nvim-java",
 		ft = "java",
@@ -87,6 +87,21 @@ return {
 		dependencies = {
 			"nvim-java/nvim-java",
 			"ibhagwan/fzf-lua",
+		},
+	},
+	{
+		"folke/noice.nvim",
+		event = "VeryLazy",
+		opts = {
+			-- add any options here
+		},
+		dependencies = {
+			-- if you lazy-load any plugin below, make sure to add proper `module="..."` entries
+			"MunifTanjim/nui.nvim",
+			-- OPTIONAL:
+			--   `nvim-notify` is only needed, if you want to use the notification view.
+			--   If not available, we use `mini` as the fallback
+			"rcarriga/nvim-notify",
 		},
 	},
 }
