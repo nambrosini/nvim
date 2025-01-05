@@ -38,6 +38,7 @@ return {
         { '<leader>f', group = '[F]ile/[F]ind' },
         { '<leader>g', group = '[G]it' },
         { '<leader>s', group = '[S]earch' },
+        { '<leader>t', group = '[T]est' },
         { '<leader>w', group = '[W]orkspace' },
         { '<leader>x', group = 'Quickfi[x]' },
       },

@@ -32,4 +32,41 @@ return {
       },
     }
   end,
+  keys = {
+    {
+      '<leader>tf',
+      function()
+        require('neotest').run.run(vim.fn.expand '%')
+      end,
+      desc = 'Run [T]ests in current [F]ile',
+    },
+    {
+      '<leader>tl',
+      function()
+        require('neotest').run.run_last()
+      end,
+      desc = '[R]e-run [l]ast test',
+    },
+    {
+      '<leader>tn',
+      function()
+        require('neotest').run.run()
+      end,
+      { desc = '[T]est Run [N]earest' },
+    },
+    {
+      '<leader>to',
+      function()
+        require('neotest').output_panel.toggle()
+      end,
+      { desc = 'Toggle output panel' },
+    },
+    {
+      '<leader>ts',
+      function()
+        require('neotest').summary.toggle()
+      end,
+      { desc = 'Toggle Summary Panel' },
+    },
+  },
 }

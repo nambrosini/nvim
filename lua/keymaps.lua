@@ -32,7 +32,8 @@ vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower win
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
 -- Open File explorer
-vim.keymap.set('n', '<leader>sv', '<CMD>Explore<CR>', { desc = 'Open File Explorer' })
+-- vim.keymap.set('n', '<leader>sv', '<CMD>Explore<CR>', { desc = 'Open File Explorer' })
+vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Show problem/diagnostic under cursor' })
 
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`

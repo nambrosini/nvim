@@ -37,6 +37,29 @@ return {
       end)
     end,
   },
+  {
+    'echasnovski/mini.diff',
+    event = 'VeryLazy',
+    keys = {
+      {
+        '<leader>gd',
+        function()
+          require('mini.diff').toggle_overlay(0)
+        end,
+        desc = 'Toggle mini.diff overlay',
+      },
+    },
+    opts = {
+      view = {
+        style = 'sign',
+        signs = {
+          add = '▎',
+          change = '▎',
+          delete = '',
+        },
+      },
+    },
+  },
   -- Fast and feature-rich surround actions. For text that includes
   -- surrounding characters like brackets or quotes, this allows you
   -- to select the text inside, change or modify the surrounding characters,
