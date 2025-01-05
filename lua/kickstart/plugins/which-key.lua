@@ -37,6 +37,7 @@ return {
         { '<leader>d', group = '[D]ebug' },
         { '<leader>f', group = '[F]ile/[F]ind' },
         { '<leader>g', group = '[G]it' },
+        { '<leader>gh', group = '[G]it [H]unks' },
         { '<leader>s', group = '[S]earch' },
         { '<leader>t', group = '[T]est' },
         { '<leader>w', group = '[W]orkspace' },

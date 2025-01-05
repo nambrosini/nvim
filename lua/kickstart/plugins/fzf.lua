@@ -15,7 +15,6 @@ return {
     { '<leader>ff', '<cmd>FzfLua files<cr>', desc = '[F]ind [F]iles' },
     { '<leader>fg', '<cmd>FzfLua git_files<cr>', desc = '[F]ind [G]it files' },
     { '<leader>gc', '<cmd>FzfLua git_commits<cr>', desc = '[G]it [C]ommits' },
-    { '<leader>gs', '<cmd>FzfLua git_status<cr>', desc = '[G]it [S]tatus' },
     { '<leader>sb', '<cmd>FzfLua lgrep_curbuf<cr>', desc = '[S]earch Current [B]uffer' },
     { '<leader>sc', '<cmd>FzfLua command_history<cr>', desc = '[S]earch [c]ommand history' },
     { '<leader>sd', '<cmd>FzfLua diagnostics_document', desc = '[S]earch Documents [d]iagnostics' },
