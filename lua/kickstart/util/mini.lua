@@ -81,6 +81,7 @@ end
 
 ---@param opts {skip_next: string, skip_ts: string[], skip_unbalanced: boolean, markdown: boolean}
 function M.pairs(opts)
+  local Snacks = require 'snacks'
   Snacks.toggle({
     name = 'Mini Pairs',
     get = function()

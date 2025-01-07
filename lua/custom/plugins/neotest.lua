@@ -3,6 +3,7 @@ return {
   dependencies = {
     'nvim-neotest/neotest-go',
     'lawrence-laz/neotest-zig',
+    'rcasia/neotest-java',
     'nvim-neotest/nvim-nio',
     'nvim-lua/plenary.nvim',
     'antoinemadec/FixCursorHold.nvim',
@@ -29,6 +30,7 @@ return {
           },
         },
         require 'rustaceanvim.neotest',
+        require 'neotest-java',
       },
     }
   end,
@@ -52,21 +54,21 @@ return {
       function()
         require('neotest').run.run()
       end,
-      { desc = '[T]est Run [N]earest' },
+      desc = '[T]est Run [N]earest',
     },
     {
       '<leader>to',
       function()
         require('neotest').output_panel.toggle()
       end,
-      { desc = 'Toggle output panel' },
+      desc = 'Toggle output panel',
     },
     {
       '<leader>ts',
       function()
         require('neotest').summary.toggle()
       end,
-      { desc = 'Toggle Summary Panel' },
+      desc = 'Toggle Summary Panel',
     },
   },
 }
