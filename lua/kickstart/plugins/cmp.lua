@@ -15,6 +15,17 @@ return {
           end
           return 'make install_jsregexp'
         end)(),
+        config = function()
+          local keymap = vim.api.nvim_set_keymap
+          local opts = { noremap = true, silent = true }
+          keymap('i', '<TAB>', "<cmd>lua require'luasnip'.jump(1)<CR>", opts)
+          keymap('s', '<TAB>', "<cmd>lua require'luasnip'.jump(1)<CR>", opts)
+          keymap('i', '<ALT+TAB>', "<cmd>lua require'luasnip'.jump(-1)<CR>", opts)
+          keymap('s', '<ALT+TAB>', "<cmd>lua require'luasnip'.jump(-1)<CR>", opts)
+          require('luasnip.loaders.from_lua').load {
+            paths = { '~/.config/nvim/lua/snippets/' },
+          }
+        end,
         dependencies = {
           -- `friendly-snippets` contains a variety of premade snippets.
           --    See the README about individual language/framework/plugin snippets:
