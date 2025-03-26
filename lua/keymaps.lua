@@ -45,4 +45,8 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   end,
 })
 
+vim.keymap.set('n', '<leader>e', function()
+  vim.diagnostic.open_float { scope = 'cursor' }
+end, { desc = 'Show diagnostic under cursor' })
+
 -- vim: ts=2 sts=2 sw=2 et
