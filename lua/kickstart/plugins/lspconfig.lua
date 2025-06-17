@@ -208,8 +208,21 @@ return {
       --  - capabilities (table): Override fields in capabilities. Can be used to disable certain LSP features.
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
+      local MY_FQBN = 'arduino:avr:uno'
+      -- local workspace = vim.fn.expand '%:p'
       local servers = {
-        -- clangd = {},
+        clangd = {},
+        arduino_language_server = {
+          cmd = {
+            'arduino-language-server',
+            '-cli',
+            '/opt/homebrew/bin/arduino-cli',
+            '-cli-config',
+            '/Users/nambrosini/Library/Arduino15/arduino-cli.yaml',
+            '-fqbn',
+            'arduino:avr:uno',
+          },
+        },
         gopls = {},
         -- pyright = {},
         -- rust_analyzer = {},
@@ -237,6 +250,8 @@ return {
             },
           },
         },
+        zls = {},
+        marksman = {},
       }
 
       -- Ensure the servers and tools above are installed
@@ -256,9 +271,11 @@ return {
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
         'yamllint',
+        'markdownlint',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
+      vim.lsp.log.error 'ciao'
       require('mason-lspconfig').setup {
         ensure_installed = {}, -- explicitly set to an empty table (Kickstart populates installs via mason-tool-installer)
         automatic_installation = false,
@@ -271,6 +288,18 @@ return {
             server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
             require('lspconfig')[server_name].setup(server)
           end,
+        },
+      }
+
+      require('lspconfig')['arduino_language_server'].setup {
+        cmd = {
+          'arduino-language-server',
+          '-cli',
+          '/opt/homebrew/bin/arduino-cli',
+          '-cli-config',
+          '/Users/nambrosini/Library/Arduino15/arduino-cli.yaml',
+          '-fqbn',
+          'arduino:avr:uno',
         },
       }
     end,
