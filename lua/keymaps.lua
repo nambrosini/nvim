@@ -49,4 +49,7 @@ vim.keymap.set('n', '<leader>e', function()
   vim.diagnostic.open_float { scope = 'cursor' }
 end, { desc = 'Show diagnostic under cursor' })
 
+vim.keymap.set('n', '\\', '<CMD>Explore<CR>', { desc = 'Open file explorer' })
+-- keymap to toggle the file explorer
+
 -- vim: ts=2 sts=2 sw=2 et
