@@ -144,5 +144,25 @@ return {
         detached = vim.fn.has 'win32' == 0,
       },
     }
+
+    dap.adapters.codelldb = {
+      type = 'server',
+      port = '${port}',
+      executable = {
+        command = 'codelldb',
+        args = { '--port', '${port}' },
+      },
+    }
+    dap.configurations.zig = {
+      {
+        name = 'Launch',
+        type = 'codelldb',
+        request = 'launch',
+        program = '${workspaceFolder}/zig-out/bin/${workspaceFolderBasename}',
+        cwd = '${workspaceFolder}',
+        stopOnEntry = false,
+        args = {},
+      },
+    }
   end,
 }
