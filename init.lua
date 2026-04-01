@@ -132,19 +132,8 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 	end,
 })
 
-vim.pack.add({
-	"https://github.com/NMAC427/guess-indent.nvim",
-	"https://github.com/lewis6991/gitsigns.nvim",
-})
-
-require("gitsigns").setup({
-	signs = {
-		add = { text = "+" }, ---@diagnostic disable-line: missing-fields
-		change = { text = "~" }, ---@diagnostic disable-line: missing-fields
-		delete = { text = "_" }, ---@diagnostic disable-line: missing-fields
-		topdelete = { text = "‾" }, ---@diagnostic disable-line: missing-fields
-		changedelete = { text = "~" }, ---@diagnostic disable-line: missing-fields
-	},
-})
+-- Lsp Config
+require("nambrosini.lsp")
+require("nambrosini.plugins")
 
 -- vim: ts=2 sts=2 sw=2 et
