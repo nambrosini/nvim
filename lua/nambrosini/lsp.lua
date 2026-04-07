@@ -177,6 +177,7 @@ local servers = {
 			Lua = {},
 		},
 	},
+	pyright = {},
 	rust_analyzer = {},
 	stylua = {}, -- Used to format Lua code
 
