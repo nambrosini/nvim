@@ -8,6 +8,7 @@ vim.pack.add({
 	{ src = "https://github.com/saghen/blink.cmp", version = vim.version.range("1.*") },
 	{ src = "https://github.com/L3MON4D3/LuaSnip", version = vim.version.range("2.*") },
 	"https://github.com/rafamadriz/friendly-snippets",
+	"https://github.com/AlexandrosAlexiou/kotlin.nvim",
 })
 
 local parsers = {
@@ -17,6 +18,7 @@ local parsers = {
 	"helm",
 	"html",
 	"java",
+	"kotlin",
 	"lua",
 	"luadoc",
 	"markdown_inline",
@@ -50,8 +52,10 @@ vim.api.nvim_create_autocmd("FileType", {
 		-- vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
 		-- vim.wo.foldmethod = 'expr'
 
-		-- enables treesitter based indentation
-		vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+		-- enables treesitter based indentation (skip kotlin — indent queries are incomplete)
+		if filetype ~= "kotlin" then
+			vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+		end
 	end,
 })
 require("mason").setup({})
@@ -96,7 +100,13 @@ vim.api.nvim_create_autocmd("LspAttach", {
 
 		-- Execute a code action, usually your cursor needs to be on top of an error
 		-- or a suggestion from your LSP for this to activate.
-		map("<leader>ca", vim.lsp.buf.code_action, "[C]ode [A]ction", { "n", "x" })
+		map("<leader>ca", function()
+			if vim.bo[event.buf].filetype == "kotlin" then
+				vim.cmd("KotlinCodeAction")
+			else
+				vim.lsp.buf.code_action()
+			end
+		end, "[C]ode [A]ction", { "n", "x" })
 
 		-- WARN: This is not Goto Definition, this is Goto Declaration.
 		--  For example, in C this would take you to the header.
@@ -179,9 +189,6 @@ local servers = {
 	},
 	pyright = {},
 	rust_analyzer = {},
-	stylua = {}, -- Used to format Lua code
-
-	-- Special Lua Config, as recommended by neovim help docs
 }
 
 -- Ensure the servers and tools above are installed
@@ -192,16 +199,98 @@ local servers = {
 --
 -- You can press `g?` for help in this menu.
 local ensure_installed = vim.tbl_keys(servers or {})
-vim.list_extend(ensure_installed, {})
+vim.list_extend(ensure_installed, { "stylua", "ktlint", "kotlin-lsp" })
 
 require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
+
+require("kotlin").setup({
+	-- Optional: Specify root markers for multi-module projects
+	-- Default: { "build.gradle", "build.gradle.kts", "pom.xml", "mvnw" }
+	root_markers = {
+		"gradlew",
+		".git",
+		"mvnw",
+		"settings.gradle",
+	},
+
+	-- Optional: Java Runtime to run the kotlin-lsp server itself
+	-- LEGACY ONLY — ignored on v262.4739.0+ (bin/intellij-server manages
+	-- its own JBR; a warning is shown if this is set on a new install).
+	-- Only useful with older builds that ship kotlin-lsp.sh / kotlin-lsp.cmd.
+	--
+	-- When set, the plugin parses JVM args from the bundled launcher script
+	-- and invokes your custom JRE with the correct flags
+	-- Must point to JAVA_HOME (directory containing bin/java)
+	-- Examples:
+	--   macOS:   "/Library/Java/JavaVirtualMachines/jdk-25.jdk/Contents/Home"
+	--   Linux:   "/usr/lib/jvm/java-25-openjdk"
+	--   Windows: "C:\\Program Files\\Java\\jdk-25"
+	--   Env var: os.getenv("JAVA_HOME") or os.getenv("JDK25")
+	jre_path = nil,
+
+	-- Optional: JDK for symbol resolution (analyzing your Kotlin code)
+	-- This is the JDK that your project code will be analyzed against
+	-- Different from jre_path (which runs the server)
+	-- Required for: Analyzing JDK APIs, standard library symbols, platform types
+	--
+	-- Usually should match your project's target JDK version
+	-- Examples:
+	--   macOS:   "/Library/Java/JavaVirtualMachines/jdk-17.jdk/Contents/Home"
+	--   Linux:   "/usr/lib/jvm/java-17-openjdk"
+	--   Windows: "C:\\Program Files\\Java\\jdk-17"
+	--   SDKMAN:  os.getenv("HOME") .. "/.sdkman/candidates/java/17.0.8-tem"
+	jdk_for_symbol_resolution = nil, -- Auto-detect from project
+
+	-- Optional: Specify additional JVM arguments for the kotlin-lsp server
+	jvm_args = {
+		"-Xmx4g", -- Increase max heap (useful for large projects)
+	},
+
+	-- Optional: Configure inlay hints (requires kotlin-lsp v261+)
+	-- All settings default to true, set to false to disable specific hints
+	inlay_hints = {
+		enabled = true, -- Enable inlay hints (auto-enable on LSP attach)
+		parameters = true, -- Show parameter names
+		parameters_compiled = true, -- Show compiled parameter names
+		parameters_excluded = false, -- Show excluded parameter names
+		types_property = true, -- Show property types
+		types_variable = true, -- Show local variable types
+		function_return = true, -- Show function return types
+		function_parameter = true, -- Show function parameter types
+		lambda_return = true, -- Show lambda return types
+		lambda_receivers_parameters = true, -- Show lambda receivers/parameters
+		value_ranges = true, -- Show value ranges
+		kotlin_time = true, -- Show kotlin.time warnings
+	},
+
+	-- Optional: LSP-driven folding (requires kotlin-lsp v262.4739.0+)
+	-- Enabled by default; set folding.enabled = false to opt out.
+	folding = { enabled = true },
+
+	-- Optional: build-importer preference (requires kotlin-lsp v262.4739.0+)
+	-- Mirrors the VSCode `intellij.buildTool` setting:
+	--   nil = let the server pick (default)
+	--   "gradle" or "maven" = force a specific importer
+	--   ""    = none (single-file / no build system)
+	-- build_tool = "gradle",
+
+	-- Optional: file templates for new Kotlin files (requires kotlin-lsp v262.4739.0+)
+	-- When you create a new .kt file the plugin asks the server to interpolate the
+	-- chosen template. Pass a table of name → Velocity template to override the
+	-- defaults (Class, File, Interface, Data Class, Enum, Annotation, Object).
+	-- Set { enabled = false } on the table to disable the prompt entirely.
+	-- file_templates = {
+	--     enabled = true,
+	--     -- Class = "package ${PACKAGE_NAME}\n\nclass ${NAME} {\n\t|\n}",
+	-- },
+})
 
 for name, server in pairs(servers) do
 	vim.lsp.config(name, server)
 	vim.lsp.enable(name)
 end
 
-require("luasnip.loaders.from_vscode")
+require("luasnip.loaders.from_vscode").lazy_load()
 require("blink.cmp").setup({
 	keymap = {
 		preset = "default",

@@ -45,15 +45,14 @@ vim.pack.add({
 require("fzf-lua").setup({})
 
 vim.keymap.set("n", "<leader><leader>", "<cmd>FzfLua buffers<cr>", { desc = "Find Buffer" })
-vim.keymap.set("n", "<leader>sb", "<cmd>FzfLua buffers<cr>", { desc = "[F]ind [B]uffer" })
 vim.keymap.set("n", "<leader>sz", "<cmd>FzfLua oldfiles<cr>", { desc = "[F]ind [R]ecent" })
 vim.keymap.set("n", "<leader>sf", "<cmd>FzfLua files<cr>", { desc = "[F]ind [F]iles" })
 vim.keymap.set("n", "<leader>gc", "<cmd>FzfLua git_commits<cr>", { desc = "[G]it [C]ommits" })
 vim.keymap.set("n", "<leader>gg", "<cmd>FzfLua git_status<cr>", { desc = "[G]it [S]tatus" })
 vim.keymap.set("n", "<leader>sb", "<cmd>FzfLua lgrep_curbuf<cr>", { desc = "[S]earch Current [B]uffer" })
 vim.keymap.set("n", "<leader>sc", "<cmd>FzfLua command_history<cr>", { desc = "[S]earch [c]ommand history" })
-vim.keymap.set("n", "<leader>sd", "<cmd>FzfLua diagnostics_document", { desc = "[S]earch Documents [d]iagnostics" })
-vim.keymap.set("n", "<leader>sD", "<cmd>FzfLua diagnostics_workspace", { desc = "[S]earch Workspace [D]iagnostics" })
+vim.keymap.set("n", "<leader>sd", "<cmd>FzfLua diagnostics_document<cr>", { desc = "[S]earch Documents [d]iagnostics" })
+vim.keymap.set("n", "<leader>sD", "<cmd>FzfLua diagnostics_workspace<cr>", { desc = "[S]earch Workspace [D]iagnostics" })
 vim.keymap.set("n", "<leader>sg", "<cmd>FzfLua live_grep<cr>", { desc = "[S]earch [G]rep (Root dir)" })
 vim.keymap.set("n", "<leader>sh", "<cmd>FzfLua help_tags<cr>", { desc = "[S]earch [H]elp Pages" })
 vim.keymap.set("n", "<leader>sk", "<cmd>FzfLua keymaps<cr>", { desc = "[S]earch [K]eymaps" })
@@ -62,7 +61,7 @@ vim.keymap.set("n", "<leader>sr", "<cmd>FzfLua resume<cr>", { desc = "[S]earch [
 vim.keymap.set("n", "<leader>ss", "<cmd>FzfLua lsp_document_symbols<cr>", { desc = "[S]earch [s]ymbol" })
 vim.keymap.set("n", "<leader>sS", "<cmd>FzfLua lsp_workspace_symbols<cr>", { desc = "[S]earch Workspace [S]ymbol" })
 vim.keymap.set("n", "<leader>sw", "<cmd>FzfLua grep_cword<cr>", { desc = "[S]earch [w]ord" })
-vim.keymap.set("n", "<leader>sw", "<cmd>FzfLua grep_visual<cr>", { desc = "[S]earch selection" })
+vim.keymap.set("v", "<leader>sw", "<cmd>FzfLua grep_visual<cr>", { desc = "[S]earch selection" })
 vim.keymap.set("n", "<leader>sn", function()
 	require("fzf-lua").files({
 		-- cmd = 'fd -t f --search-path ' .. vim.fn.stdpath 'config',
@@ -93,6 +92,7 @@ conform.setup({
 		end
 	end,
 	formatters_by_ft = {
+		kotlin = { "ktlint" },
 		lua = { "stylua" },
 		-- Conform can also run multiple formatters sequentially
 		-- python = { "isort", "black" },
@@ -284,5 +284,12 @@ vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
 		end
 	end,
 })
+
+---@module "go.nvim"
+vim.pack.add({
+	"https://github.com/ray-x/go.nvim",
+})
+
+require("go").setup()
 
 -- vim: ts=2 sts=2 sw=2 et

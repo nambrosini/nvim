@@ -13,7 +13,7 @@ local root_dir = require("jdtls.setup").find_root(root_markers)
 local workspace_folder = home .. "/.local/share/eclipse/" .. vim.fn.fnamemodify(root_dir, ":p:h:t")
 
 -- Helper function for creating keymaps
-function nnoremap(rhs, lhs, bufopts, desc)
+local function nnoremap(rhs, lhs, bufopts, desc)
 	bufopts.desc = desc
 	vim.keymap.set("n", rhs, lhs, bufopts)
 end
@@ -39,7 +39,7 @@ local on_attach = function(client, bufnr)
 	vim.keymap.set(
 		"v",
 		"<leader>ca",
-		"<ESC><CMD>lua vim.lsp.buf.range_code_action()<CR>",
+		"<ESC><CMD>lua vim.lsp.buf.code_action()<CR>",
 		{ noremap = true, silent = true, buffer = bufnr, desc = "Code actions" }
 	)
 	nnoremap("<leader>f", function()
