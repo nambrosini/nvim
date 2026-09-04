@@ -1,8 +1,3 @@
----@module "guess-indent"
-vim.pack.add({
-	{ src = "https://github.com/NMAC427/guess-indent.nvim" },
-})
-
 ---@module 'gitsigns'
 vim.pack.add({
 	{ src = "https://github.com/lewis6991/gitsigns.nvim" },
@@ -42,7 +37,15 @@ vim.pack.add({
 	{ src = "https://github.com/ibhagwan/fzf-lua" },
 	{ src = "https://github.com/nvim-tree/nvim-web-devicons" },
 })
-require("fzf-lua").setup({})
+require("fzf-lua").setup({
+	winopts = {
+		preview = {
+			layout = "horizontal",
+			horizontal = "right:50%",
+		},
+	},
+})
+require("fzf-lua").register_ui_select()
 
 vim.keymap.set("n", "<leader><leader>", "<cmd>FzfLua buffers<cr>", { desc = "Find Buffer" })
 vim.keymap.set("n", "<leader>sz", "<cmd>FzfLua oldfiles<cr>", { desc = "[F]ind [R]ecent" })
@@ -52,7 +55,12 @@ vim.keymap.set("n", "<leader>gg", "<cmd>FzfLua git_status<cr>", { desc = "[G]it 
 vim.keymap.set("n", "<leader>sb", "<cmd>FzfLua lgrep_curbuf<cr>", { desc = "[S]earch Current [B]uffer" })
 vim.keymap.set("n", "<leader>sc", "<cmd>FzfLua command_history<cr>", { desc = "[S]earch [c]ommand history" })
 vim.keymap.set("n", "<leader>sd", "<cmd>FzfLua diagnostics_document<cr>", { desc = "[S]earch Documents [d]iagnostics" })
-vim.keymap.set("n", "<leader>sD", "<cmd>FzfLua diagnostics_workspace<cr>", { desc = "[S]earch Workspace [D]iagnostics" })
+vim.keymap.set(
+	"n",
+	"<leader>sD",
+	"<cmd>FzfLua diagnostics_workspace<cr>",
+	{ desc = "[S]earch Workspace [D]iagnostics" }
+)
 vim.keymap.set("n", "<leader>sg", "<cmd>FzfLua live_grep<cr>", { desc = "[S]earch [G]rep (Root dir)" })
 vim.keymap.set("n", "<leader>sh", "<cmd>FzfLua help_tags<cr>", { desc = "[S]earch [H]elp Pages" })
 vim.keymap.set("n", "<leader>sk", "<cmd>FzfLua keymaps<cr>", { desc = "[S]earch [K]eymaps" })
@@ -249,12 +257,6 @@ vim.pack.add({
 
 require("helm-ls").setup()
 
----@module "ibl"
-vim.pack.add({
-	"https://github.com/lukas-reineke/indent-blankline.nvim",
-})
-require("ibl").setup({})
-
 ---@module "nvim-lint"
 -- Linting
 vim.pack.add({
@@ -269,6 +271,8 @@ lint.linters_by_ft = {
 	terraform = { "tflint" },
 	zig = { "zlint" },
 }
+-- cargo/clippy exits 101 when it reports diagnostics; that's not a failure.
+lint.linters.clippy.ignore_exitcode = true
 
 -- Create autocommand which carries out the actual linting
 -- on the specified events.
@@ -285,11 +289,90 @@ vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
 	end,
 })
 
+---@module "crates.nvim"
+vim.pack.add({
+	"https://github.com/saecki/crates.nvim",
+})
+
+require("crates").setup()
+
 ---@module "go.nvim"
 vim.pack.add({
 	"https://github.com/ray-x/go.nvim",
 })
 
 require("go").setup()
+
+---@module "noice"
+vim.pack.add({
+	{ src = "https://github.com/folke/noice.nvim" },
+	{ src = "https://github.com/rcarriga/nvim-notify" },
+})
+
+require("noice").setup({
+	presets = {
+		bottom_search = true,
+		command_palette = true,
+		long_message_to_split = true,
+		lsp_doc_border = true,
+	},
+})
+
+---@module "snacks"
+vim.pack.add({
+	{ src = "https://github.com/folke/snacks.nvim" },
+})
+
+require("snacks").setup({
+	indent = { enabled = true },
+	input = { enabled = true },
+	lsp_doc_border = { enabled = false },
+	notifier = { enabled = true },
+	picker = { enabled = true },
+	scope = { enabled = true },
+	scroll = { enabled = true },
+	statuscolumn = { enabled = false },
+	words = { enabled = true },
+})
+
+---@module "flash"
+vim.pack.add({
+	{ src = "https://github.com/folke/flash.nvim" },
+})
+
+require("flash").setup()
+
+vim.keymap.set({ "n", "x", "o" }, "s", function()
+	require("flash").jump()
+end, { desc = "Flash" })
+vim.keymap.set({ "n", "x", "o" }, "S", function()
+	require("flash").treesitter()
+end, { desc = "Flash Treesitter" })
+vim.keymap.set("o", "r", function()
+	require("flash").remote()
+end, { desc = "Remote Flash" })
+vim.keymap.set({ "o", "x" }, "R", function()
+	require("flash").treesitter_search()
+end, { desc = "Treesitter Search" })
+vim.keymap.set("c", "<c-s>", function()
+	require("flash").toggle()
+end, { desc = "Toggle Flash Search" })
+
+---@module "claudecode"
+vim.pack.add({
+	{ src = "https://github.com/coder/claudecode.nvim" },
+})
+
+require("claudecode").setup()
+vim.keymap.set({ "n", "v" }, "<leader>a", "", { desc = "+ai" })
+vim.keymap.set("n", "<leader>ac", "<cmd>ClaudeCode<cr>", { desc = "Toggle Claude" })
+vim.keymap.set("n", "<leader>af", "<cmd>ClaudeCodeFocus<cr>", { desc = "Focus Claude" })
+vim.keymap.set("n", "<leader>ar", "<cmd>ClaudeCode --resume<cr>", { desc = "Resume Claude" })
+vim.keymap.set("n", "<leader>aC", "<cmd>ClaudeCode --continue<cr>", { desc = "Continue Claude" })
+vim.keymap.set("n", "<leader>am", "<cmd>ClaudeCodeSelectModel<cr>", { desc = "Select Claude model" })
+vim.keymap.set("n", "<leader>ab", "<cmd>ClaudeCodeAdd %<cr>", { desc = "Add current buffer" })
+vim.keymap.set("v", "<leader>as", "<cmd>ClaudeCodeSend<cr>", { desc = "Send to Claude" })
+vim.keymap.set("n", "<leader>aa", "<cmd>ClaudeCodeDiffAccept<cr>", { desc = "Accept diff" })
+vim.keymap.set("n", "<leader>ad", "<cmd>ClaudeCodeDiffDeny<cr>", { desc = "Deny diff" })
 
 -- vim: ts=2 sts=2 sw=2 et

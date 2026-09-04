@@ -9,6 +9,7 @@ vim.pack.add({
 	{ src = "https://github.com/L3MON4D3/LuaSnip", version = vim.version.range("2.*") },
 	"https://github.com/rafamadriz/friendly-snippets",
 	"https://github.com/AlexandrosAlexiou/kotlin.nvim",
+	"https://github.com/mrcjkb/rustaceanvim",
 })
 
 local parsers = {
@@ -112,6 +113,10 @@ vim.api.nvim_create_autocmd("LspAttach", {
 		--  For example, in C this would take you to the header.
 		map("gD", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
 
+		-- Shows the signature in a small floating box; pressing it again
+		-- while the box is open moves focus into it for scrolling.
+		map("<C-k>", vim.lsp.buf.signature_help, "Signature Help", "i")
+
 		local client = vim.lsp.get_client_by_id(event.data.client_id)
 		if client and client:supports_method("textDocument/documentHighlight", event.buf) then
 			local highlight_augroup = vim.api.nvim_create_augroup("kickstart-lsp-highlight", { clear = false })
@@ -188,7 +193,6 @@ local servers = {
 		},
 	},
 	pyright = {},
-	rust_analyzer = {},
 }
 
 -- Ensure the servers and tools above are installed
@@ -199,7 +203,7 @@ local servers = {
 --
 -- You can press `g?` for help in this menu.
 local ensure_installed = vim.tbl_keys(servers or {})
-vim.list_extend(ensure_installed, { "stylua", "ktlint", "kotlin-lsp" })
+vim.list_extend(ensure_installed, { "stylua", "ktlint", "kotlin-lsp", "rust-analyzer" })
 
 require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
 
