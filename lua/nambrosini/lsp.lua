@@ -12,10 +12,26 @@ vim.pack.add({
 	"https://github.com/mrcjkb/rustaceanvim",
 })
 
+-- Neovim's built-in filetype detection doesn't tag compose files as
+-- yaml.docker-compose, which docker_compose_language_service requires.
+vim.filetype.add({
+	filename = {
+		["docker-compose.yml"] = "yaml.docker-compose",
+		["docker-compose.yaml"] = "yaml.docker-compose",
+		["compose.yml"] = "yaml.docker-compose",
+		["compose.yaml"] = "yaml.docker-compose",
+	},
+	pattern = {
+		["docker%-compose%.[%w_.-]+%.ya?ml"] = "yaml.docker-compose",
+		["compose%.[%w_.-]+%.ya?ml"] = "yaml.docker-compose",
+	},
+})
+
 local parsers = {
 	"bash",
 	"c",
 	"diff",
+	"dockerfile",
 	"helm",
 	"html",
 	"java",
@@ -154,6 +170,8 @@ vim.api.nvim_create_autocmd("LspAttach", {
 --  See `:help lsp-config` for information about keys and how to configure
 ---@type table<string, vim.lsp.Config>
 local servers = {
+	dockerls = {},
+	docker_compose_language_service = {},
 	gopls = {},
 	helm_ls = {
 		yamlls = {
