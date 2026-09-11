@@ -36,6 +36,7 @@ local parsers = {
 	"html",
 	"java",
 	"kotlin",
+	"latex",
 	"lua",
 	"luadoc",
 	"markdown_inline",
@@ -211,6 +212,7 @@ local servers = {
 		},
 	},
 	pyright = {},
+	texlab = {},
 }
 
 -- Ensure the servers and tools above are installed

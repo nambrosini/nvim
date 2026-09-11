@@ -358,6 +358,13 @@ vim.keymap.set("c", "<c-s>", function()
 	require("flash").toggle()
 end, { desc = "Toggle Flash Search" })
 
+---@module "vimtex"
+vim.pack.add({
+	{ src = "https://github.com/lervag/vimtex" },
+})
+
+vim.g.vimtex_view_method = "skim" -- macOS; requires Skim.app
+
 ---@module "claudecode"
 vim.pack.add({
 	{ src = "https://github.com/coder/claudecode.nvim" },
