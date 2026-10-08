@@ -32,47 +32,63 @@ require("which-key").setup({
 	},
 })
 
----@module 'ibhagwan/fzf-lua'
-vim.pack.add({
-	{ src = "https://github.com/ibhagwan/fzf-lua" },
-	{ src = "https://github.com/nvim-tree/nvim-web-devicons" },
-})
-require("fzf-lua").setup({
-	winopts = {
-		preview = {
-			layout = "horizontal",
-			horizontal = "right:50%",
-		},
-	},
-})
-require("fzf-lua").register_ui_select()
-
-vim.keymap.set("n", "<leader><leader>", "<cmd>FzfLua buffers<cr>", { desc = "Find Buffer" })
-vim.keymap.set("n", "<leader>sz", "<cmd>FzfLua oldfiles<cr>", { desc = "[F]ind [R]ecent" })
-vim.keymap.set("n", "<leader>sf", "<cmd>FzfLua files<cr>", { desc = "[F]ind [F]iles" })
-vim.keymap.set("n", "<leader>gc", "<cmd>FzfLua git_commits<cr>", { desc = "[G]it [C]ommits" })
-vim.keymap.set("n", "<leader>gg", "<cmd>FzfLua git_status<cr>", { desc = "[G]it [S]tatus" })
-vim.keymap.set("n", "<leader>sb", "<cmd>FzfLua lgrep_curbuf<cr>", { desc = "[S]earch Current [B]uffer" })
-vim.keymap.set("n", "<leader>sc", "<cmd>FzfLua command_history<cr>", { desc = "[S]earch [c]ommand history" })
-vim.keymap.set("n", "<leader>sd", "<cmd>FzfLua diagnostics_document<cr>", { desc = "[S]earch Documents [d]iagnostics" })
-vim.keymap.set(
-	"n",
-	"<leader>sD",
-	"<cmd>FzfLua diagnostics_workspace<cr>",
-	{ desc = "[S]earch Workspace [D]iagnostics" }
-)
-vim.keymap.set("n", "<leader>sg", "<cmd>FzfLua live_grep<cr>", { desc = "[S]earch [G]rep (Root dir)" })
-vim.keymap.set("n", "<leader>sh", "<cmd>FzfLua help_tags<cr>", { desc = "[S]earch [H]elp Pages" })
-vim.keymap.set("n", "<leader>sk", "<cmd>FzfLua keymaps<cr>", { desc = "[S]earch [K]eymaps" })
-vim.keymap.set("n", "<leader>sq", "<cmd>FzfLua quickfix<cr>", { desc = "[S]earch [Q]uickfix" })
-vim.keymap.set("n", "<leader>sr", "<cmd>FzfLua resume<cr>", { desc = "[S]earch [R]esume" })
-vim.keymap.set("n", "<leader>ss", "<cmd>FzfLua lsp_document_symbols<cr>", { desc = "[S]earch [s]ymbol" })
-vim.keymap.set("n", "<leader>sS", "<cmd>FzfLua lsp_workspace_symbols<cr>", { desc = "[S]earch Workspace [S]ymbol" })
-vim.keymap.set("n", "<leader>sw", "<cmd>FzfLua grep_cword<cr>", { desc = "[S]earch [w]ord" })
-vim.keymap.set("v", "<leader>sw", "<cmd>FzfLua grep_visual<cr>", { desc = "[S]earch selection" })
+---@module "snacks"
+vim.keymap.set("n", "<leader><leader>", function()
+	Snacks.picker.buffers()
+end, { desc = "Find Buffer" })
+vim.keymap.set("n", "<leader>sz", function()
+	Snacks.picker.recent()
+end, { desc = "[F]ind [R]ecent" })
+vim.keymap.set("n", "<leader>sf", function()
+	Snacks.picker.files()
+end, { desc = "[F]ind [F]iles" })
+vim.keymap.set("n", "<leader>gc", function()
+	Snacks.picker.git_log()
+end, { desc = "[G]it [C]ommits" })
+vim.keymap.set("n", "<leader>gg", function()
+	Snacks.picker.git_status()
+end, { desc = "[G]it [S]tatus" })
+vim.keymap.set("n", "<leader>sb", function()
+	Snacks.picker.lines()
+end, { desc = "[S]earch Current [B]uffer" })
+vim.keymap.set("n", "<leader>sc", function()
+	Snacks.picker.command_history()
+end, { desc = "[S]earch [c]ommand history" })
+vim.keymap.set("n", "<leader>sd", function()
+	Snacks.picker.diagnostics_buffer()
+end, { desc = "[S]earch Documents [d]iagnostics" })
+vim.keymap.set("n", "<leader>sD", function()
+	Snacks.picker.diagnostics()
+end, { desc = "[S]earch Workspace [D]iagnostics" })
+vim.keymap.set("n", "<leader>sg", function()
+	Snacks.picker.grep()
+end, { desc = "[S]earch [G]rep (Root dir)" })
+vim.keymap.set("n", "<leader>sh", function()
+	Snacks.picker.help()
+end, { desc = "[S]earch [H]elp Pages" })
+vim.keymap.set("n", "<leader>sk", function()
+	Snacks.picker.keymaps()
+end, { desc = "[S]earch [K]eymaps" })
+vim.keymap.set("n", "<leader>sq", function()
+	Snacks.picker.qflist()
+end, { desc = "[S]earch [Q]uickfix" })
+vim.keymap.set("n", "<leader>sr", function()
+	Snacks.picker.resume()
+end, { desc = "[S]earch [R]esume" })
+vim.keymap.set("n", "<leader>ss", function()
+	Snacks.picker.lsp_symbols()
+end, { desc = "[S]earch [s]ymbol" })
+vim.keymap.set("n", "<leader>sS", function()
+	Snacks.picker.lsp_workspace_symbols()
+end, { desc = "[S]earch Workspace [S]ymbol" })
+vim.keymap.set("n", "<leader>sw", function()
+	Snacks.picker.grep_word()
+end, { desc = "[S]earch [w]ord" })
+vim.keymap.set("v", "<leader>sw", function()
+	Snacks.picker.grep_word()
+end, { desc = "[S]earch selection" })
 vim.keymap.set("n", "<leader>sn", function()
-	require("fzf-lua").files({
-		-- cmd = 'fd -t f --search-path ' .. vim.fn.stdpath 'config',
+	Snacks.picker.files({
 		cwd = vim.fn.stdpath("config"),
 		prompt = "Neovim> ",
 	})
@@ -167,11 +183,17 @@ ai.setup({
 })
 
 -- Add/delete/replace surroundings (brackets, quotes, etc.)
---
--- - saiw) - [S]urround [A]dd [I]nner [W]ord [)]Paren
--- - sd'   - [S]urround [D]elete [']quotes
--- - sr)'  - [S]urround [R]eplace [)] [']
-require("mini.surround").setup()
+require("mini.surround").setup({
+	mappings = {
+		add = "gsa", -- Add surrounding in Normal and Visual modes
+		delete = "gsd", -- Delete surrounding
+		find = "gsf", -- Find surrounding (to the right)
+		find_left = "gsF", -- Find surrounding (to the left)
+		highlight = "gsh", -- Highlight surrounding
+		replace = "gsr", -- Replace surrounding
+		update_n_lines = "gsn", -- Update `n_lines`
+	},
+})
 
 -- Shows inline diff
 require("mini.diff").setup({
@@ -198,14 +220,6 @@ require("mini.pairs").setup()
 local statusline = require("mini.statusline")
 -- set use_icons to true if you have a Nerd Font
 statusline.setup({ use_icons = vim.g.have_nerd_font })
-
--- You can configure sections in the statusline by overriding their
--- default behavior. For example, here we set the section for
--- cursor location to LINE:COLUMN
----@diagnostic disable-next-line: duplicate-set-field
-statusline.section_location = function()
-	return "%2l:%-2v"
-end
 
 ---@module "neo-tree"
 vim.pack.add({
@@ -294,7 +308,7 @@ vim.pack.add({
 	"https://github.com/saecki/crates.nvim",
 })
 
-require("crates").setup()
+require("crates").setup({})
 
 ---@module "go.nvim"
 vim.pack.add({
@@ -312,7 +326,6 @@ vim.pack.add({
 require("noice").setup({
 	presets = {
 		bottom_search = true,
-		command_palette = true,
 		long_message_to_split = true,
 		lsp_doc_border = true,
 	},
@@ -325,10 +338,7 @@ vim.pack.add({
 
 require("snacks").setup({
 	indent = { enabled = true },
-	input = { enabled = true },
-	lsp_doc_border = { enabled = false },
-	notifier = { enabled = true },
-	picker = { enabled = true },
+	picker = { enabled = true, ui_select = true },
 	scope = { enabled = true },
 	scroll = { enabled = true },
 	statuscolumn = { enabled = false },
@@ -365,21 +375,11 @@ vim.pack.add({
 
 vim.g.vimtex_view_method = "skim" -- macOS; requires Skim.app
 
----@module "claudecode"
+---@module "devcontainer"
 vim.pack.add({
-	{ src = "https://github.com/coder/claudecode.nvim" },
+	{ src = "https://codeberg.org/esensar/nvim-dev-container" },
 })
 
-require("claudecode").setup()
-vim.keymap.set({ "n", "v" }, "<leader>a", "", { desc = "+ai" })
-vim.keymap.set("n", "<leader>ac", "<cmd>ClaudeCode<cr>", { desc = "Toggle Claude" })
-vim.keymap.set("n", "<leader>af", "<cmd>ClaudeCodeFocus<cr>", { desc = "Focus Claude" })
-vim.keymap.set("n", "<leader>ar", "<cmd>ClaudeCode --resume<cr>", { desc = "Resume Claude" })
-vim.keymap.set("n", "<leader>aC", "<cmd>ClaudeCode --continue<cr>", { desc = "Continue Claude" })
-vim.keymap.set("n", "<leader>am", "<cmd>ClaudeCodeSelectModel<cr>", { desc = "Select Claude model" })
-vim.keymap.set("n", "<leader>ab", "<cmd>ClaudeCodeAdd %<cr>", { desc = "Add current buffer" })
-vim.keymap.set("v", "<leader>as", "<cmd>ClaudeCodeSend<cr>", { desc = "Send to Claude" })
-vim.keymap.set("n", "<leader>aa", "<cmd>ClaudeCodeDiffAccept<cr>", { desc = "Accept diff" })
-vim.keymap.set("n", "<leader>ad", "<cmd>ClaudeCodeDiffDeny<cr>", { desc = "Deny diff" })
+require("devcontainer").setup({})
 
 -- vim: ts=2 sts=2 sw=2 et
